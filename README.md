@@ -1,5 +1,6 @@
 Design Choices:
-Function for Factorial Calculation: The program defines a factorial function using recursion. This function calculates the factorial of a given number n.
+Function for Factorial Calculation: 
+The program defines a factorial function using recursion. This function calculates the factorial of a given number n.
 
 Main Function for User Interaction: The main function is the entry point of the program. It prompts the user to enter a non-negative integer and then calls the factorial function to calculate the factorial of the entered number.
 
