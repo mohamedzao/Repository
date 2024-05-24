@@ -17,7 +17,8 @@ Running the Program:
 
 To run the program, save the script as todo.sh and make it executable (chmod +x todo.sh).
 Execute the script from the terminal, optionally passing one of the available commands as an argument. 
-For example: ./todo.sh createtask
+For example: ./todo.sh createtask.
+
 Follow the prompts to perform the desired action.
 Overall, the design aims to provide a simple and intuitive interface for managing todo tasks while ensuring data integrity and ease of maintenance
 
