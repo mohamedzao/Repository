@@ -81,14 +81,22 @@ deletetask() {
     echo "Enter the ID of the task you want to delete:"
     read -r id
 
-    # Check if the task exists
+    # Check if the task file exists
     if [[ ! -f "file2" ]]; then
-        echo "Task not found." >&2
+        echo "Task file not found." >&2
         return 1
     fi
 
-    rm "file2"
-    echo "Task deleted successfully!"
+    # Check if the task ID exists in the file
+    if ! grep -q "^$id:" "file2"; then
+        echo "Task with ID $id not found." >&2
+        return 1
+    fi
+
+    # Delete the task
+    sed -i "/^$id:/d" "file2"
+
+    echo "Task with ID $id deleted successfully!"
 }
 
 # Function to show all information about a task
@@ -96,14 +104,24 @@ showtask() {
     echo "Enter the ID of the task you want to view:"
     read -r id
 
-    # Check if the task exists
-    if [[ ! -f "$file2" ]]; then
-        echo "Task not found." >&2
+    # Check if the task file exists
+    if [[ ! -f "file2" ]]; then
+        echo "Task file not found." >&2
         return 1
     fi
 
-    cat "file2"
+    # Check if the task ID exists in the file
+    if ! grep -q "^$id:" "file2"; then
+        echo "Task with ID $id not found." >&2
+        return 1
+    fi
+
+    # Display the task with the specified ID
+    grep "^$id:" "file2"
+
+    return 0
 }
+
 
 # Function to list tasks of a given day
 listtasks() {
