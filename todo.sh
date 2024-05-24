@@ -3,14 +3,10 @@
 
 
 # Function to create a task
-createtask() {
-    echo "enter task id:"
-    read -r id 
 
+createtask() {
     echo "Enter task title:"
     read -r title
-
-   
 
     echo "Enter task description (optional):"
     read -r description
@@ -21,13 +17,9 @@ createtask() {
     # Generate a unique identifier for the task
     id=$(uuidgen)
 
-    # Format the due date and time
-    due_date=$(date -d "$due_date_input" +"%Y-%m-%d %H:%M")
-
     # Save the task details to a file
     echo "id: $id" > "file2"
     echo "title: $title" >> "file2"
-    echo "due_date: $due_date" >> "file2"
     echo "description: $description" >> "file2"
     echo "location: $location" >> "file2"
     echo "completed: false" >> "file2"
@@ -40,41 +32,43 @@ updatetask() {
     echo "Enter the ID of the task you want to update:"
     read -r id
 
-    # Check if the task exists
+    # Check if the task file exists
     if [[ ! -f "file2" ]]; then
-        echo "Task not found." >&2
+        echo "Task file not found." >&2
         return 1
     fi
 
-    # Read the task details
-    read -r _ title _ < "file2"
+    # Check if the task ID exists in the file
+    if ! grep -q "^id: $id$" "file2"; then
+        echo "Task with ID $id not found." >&2
+        return 1
+    fi
 
     echo "Enter new title (leave blank to keep the current title):"
     read -r new_title
-    if [[ -n $new_title ]]; then
-        title=$new_title
-    fi
-
-    echo "Enter new due date and time (YYYY-MM-DD HH:MM) (leave blank to keep the current due date):"
-    read -r new_due_date_input
-    if [[ -n $new_due_date_input ]]; then
-    
-            
-            new_due_date=$(date -d "$new_due_date_input" +"%Y-%m-%d %H:%M")
-            sed -i "s/due_date: .*/due_date: $new_due_date/" "file2"
-        
-    fi
 
     echo "Enter new description (leave blank to keep the current description):"
     read -r new_description
-    sed -i "s/description: .*/description: $new_description/" "file2"
 
     echo "Enter new location (leave blank to keep the current location):"
     read -r new_location
-    sed -i "s/location: .*/location: $new_location/" "file2"
 
-    echo "Task updated successfully!"
+    # Update task details in the file
+    if [[ -n $new_title ]]; then
+        sed -i "s/^title: .*/title: $new_title/" "file2"
+    fi
+
+    if [[ -n $new_description ]]; then
+        sed -i "s/^description: .*/description: $new_description/" "file2"
+    fi
+
+    if [[ -n $new_location ]]; then
+        sed -i "s/^location: .*/location: $new_location/" "file2"
+    fi
+
+    echo "Task with ID $id updated successfully!"
 }
+
 
 # Function to delete a task
 deletetask() {
