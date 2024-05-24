@@ -15,11 +15,7 @@ createtask() {
         echo "Enter due date and time (YYYY-MM-DD HH:MM):"
         read -r due_date_input
 
-        if [[ ! $due_date_input =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}\s[0-9]{2}:[0-9]{2}$ ]]; then
-            echo "Invalid date format. Please use YYYY-MM-DD HH:MM format." >&2
-        else
-            break
-        fi
+       
     done
 
     echo "Enter task description (optional):"
@@ -68,13 +64,11 @@ updatetask() {
     echo "Enter new due date and time (YYYY-MM-DD HH:MM) (leave blank to keep the current due date):"
     read -r new_due_date_input
     if [[ -n $new_due_date_input ]]; then
-        if [[ ! $new_due_date_input =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}\s[0-9]{2}:[0-9]{2}$ ]]; then
-            echo "Invalid date format. Please use YYYY-MM-DD HH:MM format." >&2
-            return 1
-        else
+    
+            
             new_due_date=$(date -d "$new_due_date_input" +"%Y-%m-%d %H:%M")
             sed -i "s/due_date: .*/due_date: $new_due_date/" "$TODO_DIR/$id.txt"
-        fi
+        
     fi
 
     echo "Enter new description (leave blank to keep the current description):"
