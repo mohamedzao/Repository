@@ -1,60 +1,26 @@
-Here's a detailed explanation of the design choices for the "todo" program and how to run it:
+The design choices of the todo.sh script:
 
-Design Choices:
 Data Storage:
 
-Tasks are stored in a text file named "todo.txt".
-Each task is represented as a single line in the file, with fields separated by a delimiter (in this case, '|').
-Fields for each task include:
-Title: Required for every task.
-Description: Additional information about the task.
-Location: Where the task needs to be done.
-Due Date: Deadline for completing the task.
-Completion Marker: Indicates whether the task is completed or not.
-
+Each task is stored as a separate text file in a directory specified by the TODO_DIR variable (default is ~/.todo). Storing each task in a separate file simplifies management and makes it easier to manipulate tasks individually.
+Task details are stored within each text file in a simple key-value format.
 Code Organization:
 
-The program is structured around functions to handle different operations.
-Each function corresponds to one of the required actions: creating, updating, deleting, showing, listing, or searching for tasks.
-Error handling is incorporated to catch invalid input and provide appropriate error messages.
-The main part of the program handles command-line arguments and invokes the corresponding function based on the user's input.
-User Interaction:
+The script is organized into several functions, each responsible for a specific action (e.g., createtask, updatetask, etc.). This makes the code modular and easier to maintain.
+Input validation is performed within each function to ensure the integrity of the data.
+The main logic of the script is contained within a case statement, which routes the user's command to the appropriate function.
+User Interface:
 
-Users interact with the program through the command line interface.
-When executing the program without arguments, it defaults to displaying tasks for the current day.
-For actions like creating, updating, deleting, or marking tasks as completed, the program prompts the user for necessary information.
-Clear and informative messages guide users through the process and inform them about the outcome of their actions.
-How to Run the Program:
-Download the Script: Obtain the "todo" script file from a trusted source or create it yourself.
+The script interacts with the user through the terminal using echo and read commands.
+Error messages are redirected to standard error (>&2) to differentiate them from regular output.
+Running the Program:
 
-Make the Script Executable: Ensure that the script has executable permissions using the chmod command.
+To run the program, save the script as todo.sh and make it executable (chmod +x todo.sh).
+Execute the script from the terminal, optionally passing one of the available commands as an argument. For example:
 
-chmod +x todo
-
-
-Run the Program:
-
-To create a task, use the command:
-./todo create
-To update a task, use:
-./todo update
-To delete a task, use:
-./todo delete
-To show information about a task, use:
-./todo show <task_id>
-To list tasks for a given day, use:
-./todo list <date>
-To search for a task by title, use:
-./todo search <title>
-If you run the program without any arguments, it will display completed and uncompleted tasks for the current day.
-
-Follow the Prompts: Provide the required information as prompted by the program, such as task details or task IDs.
-
-Review Results: After each action, review the output to ensure that tasks were created, updated, deleted, or listed as expected.
-
-Summary:
-The "todo" program offers a convenient way to manage tasks with various functionalities. By storing tasks in a text file and providing a set of actions to manipulate them, users can efficiently organize their tasks from the command line. With clear prompts and error messages, users can interact with the program seamlessly to accomplish their task management needs.
-
+./todo.sh createtask
+Follow the prompts to perform the desired action.
+Overall, the design aims to provide a simple and intuitive interface for managing todo tasks while ensuring data integrity and ease of maintenance
 
 
 
