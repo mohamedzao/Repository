@@ -122,9 +122,19 @@ listtasks() {
     echo "Enter the date (YYYY-MM-DD) to list tasks for:"
     read -r date_input
 
+    # Check if any task files exist
+    if ! ls -A "file2" &> /dev/null; then
+        echo "No tasks found." >&2
+        return 1
+    fi
+
+    # Loop through each task file
     for file in "file2"; do
+        # Read the due date from the task file
         read -r _ _ due_date _ < "$file"
         due_date=$(date -d "$due_date" +"%Y-%m-%d")
+
+        # Check if the due date matches the input date
         if [[ $due_date == $date_input ]]; then
             echo "Task: $file"
             cat "$file"
@@ -133,15 +143,29 @@ listtasks() {
     done
 }
 
+
 # Function to search for a task by title
 searchtask() {
     echo "Enter the title of the task you want to search for:"
     read -r title
 
+    # Check if any task files exist
+    if ! ls -A "file2" &> /dev/null; then
+        echo "No tasks found." >&2
+        return 1
+    fi
+
+    # Loop through each task file
     for file in "file2"; do
-        grep -q "title: $title" "$file" && cat "$file"
+        # Check if the title exists in the task file
+        if grep -q "^title: $title$" "$file"; then
+            echo "Task: $file"
+            cat "$file"
+            echo
+        fi
     done
 }
+
 
 # If no arguments provided, display tasks of the current day
 if [[ $# -eq 0 ]]; then
