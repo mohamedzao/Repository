@@ -11,6 +11,7 @@ Description: Additional information about the task.
 Location: Where the task needs to be done.
 Due Date: Deadline for completing the task.
 Completion Marker: Indicates whether the task is completed or not.
+
 Code Organization:
 
 The program is structured around functions to handle different operations.
