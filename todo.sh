@@ -1,10 +1,6 @@
+
 #!/bin/bash
 
-# Directory to store task files
-TODO_DIR="$HOME/.todo"
-
-# Create the directory if it doesn't exist
-mkdir -p "$TODO_DIR"
 
 # Function to create a task
 createtask() {
@@ -14,12 +10,7 @@ createtask() {
     echo "Enter task title:"
     read -r title
 
-    while true; do
-        echo "Enter due date and time (YYYY-MM-DD HH:MM):"
-        read -r due_date_input
-
-       
-    done
+   
 
     echo "Enter task description (optional):"
     read -r description
@@ -34,12 +25,12 @@ createtask() {
     due_date=$(date -d "$due_date_input" +"%Y-%m-%d %H:%M")
 
     # Save the task details to a file
-    echo "id: $id" > "$TODO_DIR/$id.txt"
-    echo "title: $title" >> "$TODO_DIR/$id.txt"
-    echo "due_date: $due_date" >> "$TODO_DIR/$id.txt"
-    echo "description: $description" >> "$TODO_DIR/$id.txt"
-    echo "location: $location" >> "$TODO_DIR/$id.txt"
-    echo "completed: false" >> "$TODO_DIR/$id.txt"
+    echo "id: $id" > "file2"
+    echo "title: $title" >> "file2"
+    echo "due_date: $due_date" >> "file2"
+    echo "description: $description" >> "file2"
+    echo "location: $location" >> "file2"
+    echo "completed: false" >> "file2"
 
     echo "Task created successfully!"
 }
@@ -50,13 +41,13 @@ updatetask() {
     read -r id
 
     # Check if the task exists
-    if [[ ! -f "$TODO_DIR/$id.txt" ]]; then
+    if [[ ! -f "file2" ]]; then
         echo "Task not found." >&2
         return 1
     fi
 
     # Read the task details
-    read -r _ title _ < "$TODO_DIR/$id.txt"
+    read -r _ title _ < "file2"
 
     echo "Enter new title (leave blank to keep the current title):"
     read -r new_title
@@ -70,17 +61,17 @@ updatetask() {
     
             
             new_due_date=$(date -d "$new_due_date_input" +"%Y-%m-%d %H:%M")
-            sed -i "s/due_date: .*/due_date: $new_due_date/" "$TODO_DIR/$id.txt"
+            sed -i "s/due_date: .*/due_date: $new_due_date/" "file2"
         
     fi
 
     echo "Enter new description (leave blank to keep the current description):"
     read -r new_description
-    sed -i "s/description: .*/description: $new_description/" "$TODO_DIR/$id.txt"
+    sed -i "s/description: .*/description: $new_description/" "file2"
 
     echo "Enter new location (leave blank to keep the current location):"
     read -r new_location
-    sed -i "s/location: .*/location: $new_location/" "$TODO_DIR/$id.txt"
+    sed -i "s/location: .*/location: $new_location/" "file2"
 
     echo "Task updated successfully!"
 }
@@ -91,12 +82,12 @@ deletetask() {
     read -r id
 
     # Check if the task exists
-    if [[ ! -f "$TODO_DIR/$id.txt" ]]; then
+    if [[ ! -f "file2" ]]; then
         echo "Task not found." >&2
         return 1
     fi
 
-    rm "$TODO_DIR/$id.txt"
+    rm "file2"
     echo "Task deleted successfully!"
 }
 
@@ -106,12 +97,12 @@ showtask() {
     read -r id
 
     # Check if the task exists
-    if [[ ! -f "$TODO_DIR/$id.txt" ]]; then
+    if [[ ! -f "$file2" ]]; then
         echo "Task not found." >&2
         return 1
     fi
 
-    cat "$TODO_DIR/$id.txt"
+    cat "file2"
 }
 
 # Function to list tasks of a given day
@@ -119,7 +110,7 @@ listtasks() {
     echo "Enter the date (YYYY-MM-DD) to list tasks for:"
     read -r date_input
 
-    for file in "$TODO_DIR"/*.txt; do
+    for file in "file2"; do
         read -r _ _ due_date _ < "$file"
         due_date=$(date -d "$due_date" +"%Y-%m-%d")
         if [[ $due_date == $date_input ]]; then
@@ -135,7 +126,7 @@ searchtask() {
     echo "Enter the title of the task you want to search for:"
     read -r title
 
-    for file in "$TODO_DIR"/*.txt; do
+    for file in "file2"; do
         grep -q "title: $title" "$file" && cat "$file"
     done
 }
@@ -156,4 +147,3 @@ case $1 in
     "searchtask") searchtask ;;
     *) echo "Invalid command. Available commands: createtask, updatetask, deletetask, showtask, listtasks, searchtask" >&2 ;;
 esac
-
