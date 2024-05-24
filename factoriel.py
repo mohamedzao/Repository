@@ -1,19 +1,97 @@
-def factorial(n):
-    if n == 0:
+#!/bin/bash
+
+# Define file to store tasks
+TODO_FILE="todo.txt"
+
+# Function to create a task
+create_task() {
+    echo "Enter task details:"
+    read -p "Title (required): " title
+    if [[ -z "$title" ]]; then
+        echo "Error: Title is required" >&2
         return 1
-    else:
-        return n * factorial(n-1)
+    fi
 
-def main():
-    try:
-        num = int(input("Enter a non-negative integer to calculate its factorial: "))
-        if num < 0:
-            print("Please enter a non-negative integer.")
-        else:
-            result = factorial(num)
-            print(f"The factorial of {num} is: {result}")
-    except ValueError:
-        print("Please enter a valid integer.")
+    read -p "Description: " description
+    read -p "Location: " location
+    read -p "Due date (YYYY-MM-DD): " due_date
+    if ! [[ $due_date =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
+        echo "Error: Invalid date format. Please use YYYY-MM-DD" >&2
+        return 1
+    fi
 
-if __name__ == "__main__":
-    main()
+    echo "$title|$description|$location|$due_date|0" >> "$TODO_FILE"
+    echo "Task created successfully"
+}
+
+# Function to display all tasks
+display_tasks() {
+    if [[ ! -f "$TODO_FILE" ]]; then
+        echo "No tasks found"
+        return 0
+    fi
+
+    while IFS='|' read -r title description location due_date completion; do
+        if [[ "$completion" -eq 0 ]]; then
+            echo "Title: $title"
+            echo "Description: $description"
+            echo "Location: $location"
+            echo "Due date: $due_date"
+            echo "Completion: Uncompleted"
+            echo "------"
+        fi
+    done < "$TODO_FILE"
+}
+
+# Function to mark a task as completed
+complete_task() {
+    display_tasks
+    read -p "Enter task number to mark as completed: " task_number
+    if [[ ! $task_number =~ ^[0-9]+$ ]]; then
+        echo "Error: Invalid input" >&2
+        return 1
+    fi
+
+    sed -i "${task_number}s/|0$/|1/" "$TODO_FILE"
+    echo "Task marked as completed"
+}
+
+# Function to delete a task
+delete_task() {
+    display_tasks
+    read -p "Enter task number to delete: " task_number
+    if [[ ! $task_number =~ ^[0-9]+$ ]]; then
+        echo "Error: Invalid input" >&2
+        return 1
+    fi
+
+    sed -i "${task_number}d" "$TODO_FILE"
+    echo "Task deleted"
+}
+
+# Main function
+main() {
+    if [[ ! -f "$TODO_FILE" ]]; then
+        touch "$TODO_FILE"
+    fi
+
+    case "$1" in
+        "create")
+            create_task
+            ;;
+        "display")
+            display_tasks
+            ;;
+        "complete")
+            complete_task
+            ;;
+        "delete")
+            delete_task
+            ;;
+        *)
+            echo "Usage: $0 {create|display|complete|delete}"
+            ;;
+    esac
+}
+
+main "$@"
