@@ -1,32 +1,79 @@
+Here's a detailed explanation of the design choices for the "todo" program and how to run it:
+
 Design Choices:
-Function for Factorial Calculation: 
-The program defines a factorial function using recursion. This function calculates the factorial of a given number n.
-
-Main Function for User Interaction: The main function is the entry point of the program. It prompts the user to enter a non-negative integer and then calls the factorial function to calculate the factorial of the entered number.
-
-Error Handling: The program includes error handling using a try-except block to handle cases where the user inputs invalid data (e.g., non-integer values).
-
 Data Storage:
-There is no explicit data storage in this program. The main computation involves manipulating integers, and the data is stored in local variables (num, result) within the scope of the functions.
 
+Tasks are stored in a text file named "todo.txt".
+Each task is represented as a single line in the file, with fields separated by a delimiter (in this case, '|').
+Fields for each task include:
+Title: Required for every task.
+Description: Additional information about the task.
+Location: Where the task needs to be done.
+Due Date: Deadline for completing the task.
+Completion Marker: Indicates whether the task is completed or not.
 Code Organization:
-The program consists of two main parts:
 
-The factorial function, responsible for computing the factorial recursively.
-The main function, which handles user interaction, input validation, and calling the factorial function.
-The script is structured such that the main function is called only if the script is executed directly (i.e., not imported as a module).
+The program is structured around functions to handle different operations.
+Each function corresponds to one of the required actions: creating, updating, deleting, showing, listing, or searching for tasks.
+Error handling is incorporated to catch invalid input and provide appropriate error messages.
+The main part of the program handles command-line arguments and invokes the corresponding function based on the user's input.
+User Interaction:
 
+Users interact with the program through the command line interface.
+When executing the program without arguments, it defaults to displaying tasks for the current day.
+For actions like creating, updating, deleting, or marking tasks as completed, the program prompts the user for necessary information.
+Clear and informative messages guide users through the process and inform them about the outcome of their actions.
 How to Run the Program:
-To run the program:
+Download the Script: Obtain the "todo" script file from a trusted source or create it yourself.
 
-Save the script to a file named calculate_factorial.py.
-Open a terminal or command prompt.
-Navigate to the directory where the script is saved.
-Run the script by executing the command: python calculate_factorial.py.
-Follow the prompts to enter a non-negative integer.
-The program will calculate the factorial of the entered number and display the result.
+Make the Script Executable: Ensure that the script has executable permissions using the chmod command.
+
+bash
+Copier le code
+chmod +x todo
+Run the Program:
+
+To create a task, use the command:
+
+bash
+Copier le code
+./todo create
+To update a task, use:
+
+bash
+Copier le code
+./todo update
+To delete a task, use:
+
+bash
+Copier le code
+./todo delete
+To show information about a task, use:
+
+bash
+Copier le code
+./todo show <task_id>
+To list tasks for a given day, use:
+
+bash
+Copier le code
+./todo list <date>
+To search for a task by title, use:
+
+bash
+Copier le code
+./todo search <title>
+If you run the program without any arguments, it will display completed and uncompleted tasks for the current day.
+
+Follow the Prompts: Provide the required information as prompted by the program, such as task details or task IDs.
+
+Review Results: After each action, review the output to ensure that tasks were created, updated, deleted, or listed as expected.
+
 Summary:
-This program is a simple command-line tool for calculating the factorial of a non-negative integer. It follows a modular design, separating the factorial calculation logic from the user interaction logic. Error handling ensures graceful handling of invalid inputs. The program is easy to run and provides clear instructions to the user.
+The "todo" program offers a convenient way to manage tasks with various functionalities. By storing tasks in a text file and providing a set of actions to manipulate them, users can efficiently organize their tasks from the command line. With clear prompts and error messages, users can interact with the program seamlessly to accomplish their task management needs.
+
+
+
 
 
 
