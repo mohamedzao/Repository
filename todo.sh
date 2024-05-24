@@ -1,9 +1,6 @@
 #!/bin/bash
 
-# Define file to store tasks
-TODO_FILE="todo.txt"
 
-# Function to create a task
 create_task() {
     echo "Enter task details:"
     read -p "Title (required): " title
@@ -24,7 +21,6 @@ create_task() {
     echo "Task created successfully"
 }
 
-# Function to display all tasks
 display_tasks() {
     if [[ ! -f "$TODO_FILE" ]]; then
         echo "No tasks found"
@@ -43,7 +39,6 @@ display_tasks() {
     done < "$TODO_FILE"
 }
 
-# Function to mark a task as completed
 complete_task() {
     display_tasks
     read -p "Enter task number to mark as completed: " task_number
@@ -56,7 +51,6 @@ complete_task() {
     echo "Task marked as completed"
 }
 
-# Function to delete a task
 delete_task() {
     display_tasks
     read -p "Enter task number to delete: " task_number
@@ -68,8 +62,6 @@ delete_task() {
     sed -i "${task_number}d" "$TODO_FILE"
     echo "Task deleted"
 }
-
-# Main function
 main() {
     if [[ ! -f "$TODO_FILE" ]]; then
         touch "$TODO_FILE"
