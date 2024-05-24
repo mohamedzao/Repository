@@ -8,6 +8,9 @@ mkdir -p "$TODO_DIR"
 
 # Function to create a task
 createtask() {
+    echo "enter task id:"
+    read -r id 
+
     echo "Enter task title:"
     read -r title
 
