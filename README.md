@@ -17,7 +17,7 @@ Error messages are redirected to standard error (>&2) to differentiate them from
 
 Running the Program:
 
-To run the program, save the script as todo.sh and make it executable (chmod +x todo.sh).
+To run the program, first create a file named "file2" ,save the script as todo.sh and make it executable (chmod +x todo.sh).
 Execute the script from the terminal, optionally passing one of the available commands as an argument. 
 For example: ./todo createtask.
 
