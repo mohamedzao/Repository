@@ -1,89 +1,162 @@
 #!/bin/bash
 
+# Directory to store task files
+TODO_DIR="$HOME/.todo"
 
-create_task() {
-    echo "Enter task details:"
-    read -p "Title (required): " title
-    if [[ -z "$title" ]]; then
-        echo "Error: Title is required" >&2
-        return 1
-    fi
+# Create the directory if it doesn't exist
+mkdir -p "$TODO_DIR"
 
-    read -p "Description: " description
-    read -p "Location: " location
-    read -p "Due date (YYYY-MM-DD): " due_date
-    if ! [[ $due_date =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
-        echo "Error: Invalid date format. Please use YYYY-MM-DD" >&2
-        return 1
-    fi
+# Function to create a task
+createtask() {
+    echo "Enter task title:"
+    read -r title
 
-    echo "$title|$description|$location|$due_date|0" >> "$TODO_FILE"
-    echo "Task created successfully"
-}
+    while true; do
+        echo "Enter due date and time (YYYY-MM-DD HH:MM):"
+        read -r due_date_input
 
-display_tasks() {
-    if [[ ! -f "$TODO_FILE" ]]; then
-        echo "No tasks found"
-        return 0
-    fi
-
-    while IFS='|' read -r title description location due_date completion; do
-        if [[ "$completion" -eq 0 ]]; then
-            echo "Title: $title"
-            echo "Description: $description"
-            echo "Location: $location"
-            echo "Due date: $due_date"
-            echo "Completion: Uncompleted"
-            echo "------"
+        if [[ ! $due_date_input =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}\s[0-9]{2}:[0-9]{2}$ ]]; then
+            echo "Invalid date format. Please use YYYY-MM-DD HH:MM format." >&2
+        else
+            break
         fi
-    done < "$TODO_FILE"
+    done
+
+    echo "Enter task description (optional):"
+    read -r description
+
+    echo "Enter task location (optional):"
+    read -r location
+
+    # Generate a unique identifier for the task
+    id=$(uuidgen)
+
+    # Format the due date and time
+    due_date=$(date -d "$due_date_input" +"%Y-%m-%d %H:%M")
+
+    # Save the task details to a file
+    echo "id: $id" > "$TODO_DIR/$id.txt"
+    echo "title: $title" >> "$TODO_DIR/$id.txt"
+    echo "due_date: $due_date" >> "$TODO_DIR/$id.txt"
+    echo "description: $description" >> "$TODO_DIR/$id.txt"
+    echo "location: $location" >> "$TODO_DIR/$id.txt"
+    echo "completed: false" >> "$TODO_DIR/$id.txt"
+
+    echo "Task created successfully!"
 }
 
-complete_task() {
-    display_tasks
-    read -p "Enter task number to mark as completed: " task_number
-    if [[ ! $task_number =~ ^[0-9]+$ ]]; then
-        echo "Error: Invalid input" >&2
+# Function to update a task
+updatetask() {
+    echo "Enter the ID of the task you want to update:"
+    read -r id
+
+    # Check if the task exists
+    if [[ ! -f "$TODO_DIR/$id.txt" ]]; then
+        echo "Task not found." >&2
         return 1
     fi
 
-    sed -i "${task_number}s/|0$/|1/" "$TODO_FILE"
-    echo "Task marked as completed"
+    # Read the task details
+    read -r _ title _ < "$TODO_DIR/$id.txt"
+
+    echo "Enter new title (leave blank to keep the current title):"
+    read -r new_title
+    if [[ -n $new_title ]]; then
+        title=$new_title
+    fi
+
+    echo "Enter new due date and time (YYYY-MM-DD HH:MM) (leave blank to keep the current due date):"
+    read -r new_due_date_input
+    if [[ -n $new_due_date_input ]]; then
+        if [[ ! $new_due_date_input =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}\s[0-9]{2}:[0-9]{2}$ ]]; then
+            echo "Invalid date format. Please use YYYY-MM-DD HH:MM format." >&2
+            return 1
+        else
+            new_due_date=$(date -d "$new_due_date_input" +"%Y-%m-%d %H:%M")
+            sed -i "s/due_date: .*/due_date: $new_due_date/" "$TODO_DIR/$id.txt"
+        fi
+    fi
+
+    echo "Enter new description (leave blank to keep the current description):"
+    read -r new_description
+    sed -i "s/description: .*/description: $new_description/" "$TODO_DIR/$id.txt"
+
+    echo "Enter new location (leave blank to keep the current location):"
+    read -r new_location
+    sed -i "s/location: .*/location: $new_location/" "$TODO_DIR/$id.txt"
+
+    echo "Task updated successfully!"
 }
 
-delete_task() {
-    display_tasks
-    read -p "Enter task number to delete: " task_number
-    if [[ ! $task_number =~ ^[0-9]+$ ]]; then
-        echo "Error: Invalid input" >&2
+# Function to delete a task
+deletetask() {
+    echo "Enter the ID of the task you want to delete:"
+    read -r id
+
+    # Check if the task exists
+    if [[ ! -f "$TODO_DIR/$id.txt" ]]; then
+        echo "Task not found." >&2
         return 1
     fi
 
-    sed -i "${task_number}d" "$TODO_FILE"
-    echo "Task deleted"
+    rm "$TODO_DIR/$id.txt"
+    echo "Task deleted successfully!"
 }
-main() {
-    if [[ ! -f "$TODO_FILE" ]]; then
-        touch "$TODO_FILE"
+
+# Function to show all information about a task
+showtask() {
+    echo "Enter the ID of the task you want to view:"
+    read -r id
+
+    # Check if the task exists
+    if [[ ! -f "$TODO_DIR/$id.txt" ]]; then
+        echo "Task not found." >&2
+        return 1
     fi
 
-    case "$1" in
-        "create")
-            create_task
-            ;;
-        "display")
-            display_tasks
-            ;;
-        "complete")
-            complete_task
-            ;;
-        "delete")
-            delete_task
-            ;;
-        *)
-            echo "Usage: $0 {create|display|complete|delete}"
-            ;;
-    esac
+    cat "$TODO_DIR/$id.txt"
 }
 
-main "$@"
+# Function to list tasks of a given day
+listtasks() {
+    echo "Enter the date (YYYY-MM-DD) to list tasks for:"
+    read -r date_input
+
+    for file in "$TODO_DIR"/*.txt; do
+        read -r _ _ due_date _ < "$file"
+        due_date=$(date -d "$due_date" +"%Y-%m-%d")
+        if [[ $due_date == $date_input ]]; then
+            echo "Task: $file"
+            cat "$file"
+            echo
+        fi
+    done
+}
+
+# Function to search for a task by title
+searchtask() {
+    echo "Enter the title of the task you want to search for:"
+    read -r title
+
+    for file in "$TODO_DIR"/*.txt; do
+        grep -q "title: $title" "$file" && cat "$file"
+    done
+}
+
+# If no arguments provided, display tasks of the current day
+if [[ $# -eq 0 ]]; then
+    listtasks
+    exit 0
+fi
+
+# Main script logic
+case $1 in
+    "createtask") createtask ;;
+    "updatetask") updatetask ;;
+    "deletetask") deletetask ;;
+    "showtask") showtask ;;
+    "listtasks") listtasks ;;
+    "searchtask") searchtask ;;
+    *) echo "Invalid command. Available commands: createtask, updatetask, deletetask, showtask, listtasks, searchtask" >&2 ;;
+esac
+
