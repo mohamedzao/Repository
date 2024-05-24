@@ -28,40 +28,22 @@ Download the Script: Obtain the "todo" script file from a trusted source or crea
 
 Make the Script Executable: Ensure that the script has executable permissions using the chmod command.
 
-bash
-Copier le code
 chmod +x todo
+
+
 Run the Program:
 
 To create a task, use the command:
-
-bash
-Copier le code
 ./todo create
 To update a task, use:
-
-bash
-Copier le code
 ./todo update
 To delete a task, use:
-
-bash
-Copier le code
 ./todo delete
 To show information about a task, use:
-
-bash
-Copier le code
 ./todo show <task_id>
 To list tasks for a given day, use:
-
-bash
-Copier le code
 ./todo list <date>
 To search for a task by title, use:
-
-bash
-Copier le code
 ./todo search <title>
 If you run the program without any arguments, it will display completed and uncompleted tasks for the current day.
 
