@@ -9,10 +9,12 @@ Code Organization:
 The script is organized into several functions, each responsible for a specific action (e.g., createtask, updatetask, etc.). This makes the code modular and easier to maintain.
 Input validation is performed within each function to ensure the integrity of the data.
 The main logic of the script is contained within a case statement, which routes the user's command to the appropriate function.
+
 User Interface:
 
 The script interacts with the user through the terminal using echo and read commands.
 Error messages are redirected to standard error (>&2) to differentiate them from regular output.
+
 Running the Program:
 
 To run the program, save the script as todo.sh and make it executable (chmod +x todo.sh).
