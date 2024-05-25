@@ -5,6 +5,8 @@
 # Function to create a task
 
 createtask() {
+echo "Enter id "
+read -r id
     echo "Enter task title:"
     read -r title
 
@@ -13,9 +15,6 @@ createtask() {
 
     echo "Enter task location (optional):"
     read -r location
-
-    # Generate a unique identifier for the task
-    id=$(uuidgen)
 
     # Save the task details to a file
     echo "id: $id" > "file2"
