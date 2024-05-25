@@ -14,9 +14,6 @@ Tasks are uniquely identified using UUIDs (Universally Unique Identifiers) gener
 Task Operations:
 
 Users can create, update, delete, view, list, and search tasks. These operations cover common task management functionalities and provide users with comprehensive control over their tasks.
-Error Handling:
-
-The program includes error handling mechanisms to deal with situations such as missing task files or invalid user input. Error messages are displayed to users to provide feedback and guidance.
 
 Code Organization:
 
