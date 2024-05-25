@@ -51,6 +51,8 @@ Run the Program:
 Execute the script from the command line:
 
 ./task_manager.sh [command]
+
+
 Replace [command] with one of the available task management commands (createtask, updatetask, deletetask, showtask, listtasks, searchtask) based on the desired operation.
 
 Follow Prompts:
